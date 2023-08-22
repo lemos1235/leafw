@@ -54,7 +54,7 @@ class _ProxiesPageState extends State<ProxiesPage> {
   }
 }
 
-class ProxyTypesMenu extends StatefulWidget {
+class ProxyTypesMenu extends StatelessWidget {
   const ProxyTypesMenu({super.key, required this.current, required this.onChanged});
 
   final void Function(ProxyType) onChanged;
@@ -62,14 +62,11 @@ class ProxyTypesMenu extends StatefulWidget {
   final ProxyType current;
 
   @override
-  State<ProxyTypesMenu> createState() => _ProxyTypesMenuState();
-}
-
-class _ProxyTypesMenuState extends State<ProxyTypesMenu> {
-  @override
   Widget build(BuildContext context) {
+    Color bgColor = context.isDark ? Color(0xFF2D2D2D) : Color(0xFFF6F7F8);
+    Color selectedTextColor = context.isDark ? Color(0xFF4B4B4B) : Color(0xFFEAECF0);
     return Material(
-      color: Color(0xFFF6F7F8),
+      color: bgColor,
       child: Container(
         alignment: Alignment.topLeft,
         width: kProxyTypeMenuWidth,
@@ -86,11 +83,11 @@ class _ProxyTypesMenuState extends State<ProxyTypesMenu> {
                 ListTile(
                   title: Text(type.title),
                   shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  selectedTileColor: Color(0xFFEAECF0),
+                  selectedTileColor: selectedTextColor,
                   selectedColor: context.colorScheme.primary,
-                  selected: type == widget.current,
+                  selected: type == current,
                   onTap: () {
-                    widget.onChanged(type);
+                    onChanged(type);
                   },
                 ),
             ],

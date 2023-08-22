@@ -36,7 +36,7 @@ extension ThemeModeExtension on ThemeMode {
   String get humanName {
     switch (this) {
       case ThemeMode.system:
-        return "跟随系统";
+        return "默认";
       case ThemeMode.light:
         return "浅色";
       case ThemeMode.dark:

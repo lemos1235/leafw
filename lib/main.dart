@@ -93,6 +93,15 @@ class _LeavesAppState extends State<LeavesApp> {
         ),
         popupMenuTheme: PopupMenuThemeData(
           color: Colors.white,
+        ),
+        segmentedButtonTheme: SegmentedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+          ),
         )
       ),
       darkTheme: ThemeData(
