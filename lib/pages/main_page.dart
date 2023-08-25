@@ -8,7 +8,6 @@ import 'package:canis/pages/settings/settings_page.dart';
 import 'package:canis/providers/proxies_provider.dart';
 import 'package:canis/widgets/tapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -28,17 +27,10 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     initProxies();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      closeSplash();
-    });
   }
 
   Future<void> initProxies() async {
     await context.read<ProxiesProvider>().initialize();
-  }
-
-  Future<void> closeSplash() async {
-    FlutterNativeSplash.remove();
   }
 
   @override

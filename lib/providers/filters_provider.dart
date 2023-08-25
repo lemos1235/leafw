@@ -18,8 +18,7 @@ class FiltersProvider with ChangeNotifier {
   List<String> internalPackageNames = [
     'club.lemos.canis',
     'com.github.kr328.clash',
-    'com.github.shadowsocks',
-    'com.leaf.and.aleaf',
+    'com.github.shadowsocks'
   ];
 
   FilterMode currentMode = FilterMode.off;

@@ -2,10 +2,10 @@
 // [Author] lg (https://github.com/lemos1235)
 // [Date] 2023/3/22
 //
+import 'package:canis/hive/modules/deviceid_hive.dart';
 import 'package:dio/dio.dart';
 import 'package:canis/model/upgrade_info.dart';
 import 'package:canis/model/proxy_group.dart';
-import 'package:canis/utils/device_util.dart';
 import 'package:canis/utils/net_util.dart';
 
 class Api {
@@ -15,14 +15,11 @@ class Api {
   static Future<ProxyGroup> getSubscription(String subscriptionUrl, {String? currentIp}) async {
     final rawUrl = Uri.parse(subscriptionUrl);
     Map<String, String?> params = Map.from(rawUrl.queryParameters);
-    final deviceId = DeviceUtil.getDeviceId();
+    final deviceId = DeviceIdOpenHive.getDeviceId();
+    params["macAddr"] = deviceId;
     if (currentIp?.isNotEmpty ?? false) {
       params["curProxyIp"] = currentIp;
     }
-    if (deviceId?.isNotEmpty ?? false) {
-      params["macAddr"] = deviceId;
-    }
-    print(rawUrl.replace(queryParameters: params));
     final response = await NetUtil.getUri(rawUrl.replace(queryParameters: params));
     final r = response.data;
     if (r != null) {

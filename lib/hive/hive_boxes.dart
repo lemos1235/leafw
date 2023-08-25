@@ -13,6 +13,7 @@ class HiveBoxes {
   static const String proxiesBox = 'proxies';
   static const String filtersBox = 'filters';
   static const String firstOpenBox = 'firstOpen';
+  static const String deviceIdOpenBox = 'deviceId';
 
   static Future<void> openBoxes() async {
     await Future.wait([
@@ -20,6 +21,7 @@ class HiveBoxes {
       Hive.openBox(proxiesBox),
       Hive.openBox(filtersBox),
       Hive.openBox(firstOpenBox),
+      Hive.openBox(deviceIdOpenBox),
     ]);
   }
 }

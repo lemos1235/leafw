@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:canis/providers/filters_provider.dart';
 import 'package:canis/providers/proxies_provider.dart';
 import 'package:canis/providers/settings_provider.dart';
-import 'package:canis/providers/settings_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 

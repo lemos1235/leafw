@@ -3,21 +3,17 @@ import 'package:canis/model/app_settings.dart';
 import 'package:canis/pages/main_page.dart';
 import 'package:canis/providers/providers.dart';
 import 'package:canis/providers/settings_provider.dart';
-import 'package:canis/utils/device_util.dart';
 import 'package:canis/utils/net_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   Logger.level = Level.info;
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Hive.initFlutter();
   await HiveBoxes.openBoxes();
-  await DeviceUtil.initDeviceInfo();
   await NetUtil.init();
   runApp(MultiProvider(
     providers: providers,
@@ -55,6 +51,7 @@ class _LeavesAppState extends State<LeavesApp> {
       title: '小象IP',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+          fontFamily: 'NotoSansSC',
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF81C784)),
           useMaterial3: true,
           navigationRailTheme: const NavigationRailThemeData(
@@ -104,6 +101,7 @@ class _LeavesAppState extends State<LeavesApp> {
             ),
           )),
       darkTheme: ThemeData(
+        fontFamily: 'NotoSansSC',
         brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSeed(brightness: Brightness.dark, seedColor: const Color(0xFF81C784)),
         useMaterial3: true,
