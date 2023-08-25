@@ -121,24 +121,30 @@ class _ProxiesContentState extends State<ProxiesContent> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        final group = proxyGroupList[index];
-        if (group.type.index != widget.proxyType.value) {
-          return SizedBox.shrink();
-        }
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            widget.proxyType == ProxyType.subscription ? _buildGroupTitle(group) : SizedBox(height: 10),
-            ProxyList(
-              proxyList: group.proxyList,
-              vpnState: vpnState,
-            ),
-          ],
-        );
-      },
-      itemCount: proxyGroupList.length,
+    return Scaffold(
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          final group = proxyGroupList[index];
+          if (group.type.index != widget.proxyType.value) {
+            return SizedBox.shrink();
+          }
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              widget.proxyType == ProxyType.subscription ? _buildGroupTitle(group) : SizedBox(height: 10),
+              ProxyList(
+                proxyList: group.proxyList,
+                vpnState: vpnState,
+              ),
+            ],
+          );
+        },
+        itemCount: proxyGroupList.length,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(LucideIcons.bird),
+      ),
     );
   }
 

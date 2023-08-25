@@ -2,7 +2,6 @@
 // [Author] lg (https://github.com/lemos1235)
 // [Date] 2023/8/19
 //
-import 'package:canis/extensions/extensions.dart';
 import 'package:canis/pages/modal/proxy_add_modal.dart';
 import 'package:canis/pages/proxies/proxies_page.dart';
 import 'package:canis/pages/settings/settings_page.dart';
@@ -51,7 +50,7 @@ class _MainPageState extends State<MainPage> {
             leading: Padding(
               padding: const EdgeInsets.only(bottom: 20, top: 10),
               child: SvgPicture.asset(
-                "assets/svgs/logo.svg",
+                "assets/svgs/bird.svg",
                 colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 width: 28,
                 height: 28,
