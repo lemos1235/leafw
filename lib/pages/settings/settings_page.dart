@@ -5,6 +5,7 @@
 import 'package:canis/extensions/extensions.dart';
 import 'package:canis/model/app_settings.dart';
 import 'package:canis/providers/settings_provider.dart';
+import 'package:canis/utils/autostart_helper.dart';
 import 'package:canis/widgets/shadow_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -116,26 +117,33 @@ class GeneralSettings extends StatefulWidget {
 }
 
 class _GeneralSettingsState extends State<GeneralSettings> {
-  bool _isBootStartup = false;
+  //开机自启
+  bool autoStartOn = false;
 
-  bool _allowLan = false;
-
+  //应用设置
   late AppSettings appSettings;
 
+  //表单设置
   late TextEditingController _socksPortController;
   late TextEditingController _httpPortController;
 
   @override
   void initState() {
     super.initState();
-    _socksPortController = TextEditingController(text: "10808");
-    _httpPortController = TextEditingController(text: "10808");
+    handleAutoStart();
+  }
+
+  //开机启动
+  void handleAutoStart() async {
+    autoStartOn = await AutostartHelper.isAutoStartEnabled();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     appSettings = context.watch<SettingsProvider>().getAppSettings();
+    _socksPortController = TextEditingController(text: appSettings.proxySettings.inboundSocksPort.toString());
+    _httpPortController = TextEditingController(text: appSettings.proxySettings.inboundHttpPort.toString());
   }
 
   @override
@@ -163,10 +171,15 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                             child: FittedBox(
                               fit: BoxFit.fill,
                               child: Switch(
-                                  value: _isBootStartup,
+                                  value: autoStartOn,
                                   onChanged: (val) {
                                     setState(() {
-                                      _isBootStartup = val;
+                                      autoStartOn = val;
+                                      if (autoStartOn) {
+                                        AutostartHelper.enableAutoStart();
+                                      } else {
+                                        AutostartHelper.disableAutoStart();
+                                      }
                                     });
                                   }),
                             ),
@@ -228,11 +241,9 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                             child: FittedBox(
                               fit: BoxFit.fill,
                               child: Switch(
-                                  value: _allowLan,
+                                  value: appSettings.proxySettings.inboundAllowAlan,
                                   onChanged: (val) {
-                                    setState(() {
-                                      _allowLan = val;
-                                    });
+                                    context.read<SettingsProvider>().updateProxySettings(inboundAllowAlan: val);
                                   }),
                             ),
                           ),

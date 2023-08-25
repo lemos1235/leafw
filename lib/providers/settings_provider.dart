@@ -32,4 +32,19 @@ class SettingsProvider with ChangeNotifier {
     );
     setAppSettings(settings);
   }
+
+  void updateProxySettings({
+    bool? inboundAllowAlan,
+    int? inboundHttpPort,
+    int? inboundSocksPort,
+  }) {
+    final settings = appSettings.copyWith(
+      proxySettings: appSettings.proxySettings.copyWith(
+        inboundAllowAlan: inboundAllowAlan,
+        inboundHttpPort: inboundHttpPort,
+        inboundSocksPort: inboundSocksPort,
+      ),
+    );
+    setAppSettings(settings);
+  }
 }

@@ -42,7 +42,6 @@ class _LeavesAppState extends State<LeavesApp> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     appSettings = context.watch<SettingsProvider>().getAppSettings();
-    print('appSettings.appearance.themeMode: ${appSettings.appearance.themeMode}');
   }
 
   @override
