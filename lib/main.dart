@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Logger.level = Level.info;
-  await Hive.initFlutter();
+  await Hive.initFlutter("Canis");
   await HiveBoxes.openBoxes();
   await NetUtil.init();
   runApp(MultiProvider(
