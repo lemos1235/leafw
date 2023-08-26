@@ -2,14 +2,21 @@
 // [Author] lg (https://github.com/lemos1235)
 // [Date] 2023/8/19
 //
+import 'dart:io';
+
+import 'package:canis/model/proxy.dart';
 import 'package:canis/pages/modal/proxy_add_modal.dart';
 import 'package:canis/pages/proxies/proxies_page.dart';
 import 'package:canis/pages/settings/settings_page.dart';
 import 'package:canis/providers/proxies_provider.dart';
 import 'package:canis/widgets/tapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_leaf/flutter_leaf.dart';
+import 'package:flutter_leaf/state.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:provider/provider.dart';
+import 'package:system_tray/system_tray.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -23,14 +30,88 @@ class _MainPageState extends State<MainPage> {
 
   Widget _body = ProxiesPage();
 
+  late FlutterLeafState vpnState;
+
+  late Proxy? currentProxy;
+
+  late AppWindow appWindow;
+
+  late SystemTray systemTray;
+
+  bool _isJustExistApp = false;
+
   @override
   void initState() {
     super.initState();
+    initSystemTray();
     initProxies();
+  }
+
+  Future<void> initSystemTray() async {
+    appWindow = AppWindow();
+    systemTray = SystemTray();
+    await systemTray.initSystemTray(
+      title: "canis",
+      iconPath: Platform.isWindows ? 'assets/icons/app_icon.ico' : 'assets/icons/app_icon.png',
+    );
+    systemTray.registerSystemTrayEventHandler((eventName) {
+      if (eventName == kSystemTrayEventClick) {
+        Platform.isWindows ? appWindow.show() : systemTray.popUpContextMenu();
+      } else if (eventName == kSystemTrayEventRightClick) {
+        Platform.isWindows ? systemTray.popUpContextMenu() : appWindow.show();
+      }
+    });
+    //窗口关闭时隐藏
+    FlutterWindowClose.setWindowShouldCloseHandler(() async {
+      if (_isJustExistApp) {
+        return true;
+      }
+      await appWindow.hide();
+      return false;
+    });
   }
 
   Future<void> initProxies() async {
     await context.read<ProxiesProvider>().initialize();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    vpnState = context.watch<ProxiesProvider>().getCurrentVpnState();
+    currentProxy = context.watch<ProxiesProvider>().getCurrentProxy();
+    updateContextMenu();
+  }
+
+  Future<void> updateContextMenu() async {
+    final Menu menu = Menu();
+    await menu.buildFrom([
+      MenuItemCheckbox(
+        label: '启用代理',
+        enabled: currentProxy != null,
+        checked: vpnState == FlutterLeafState.connected,
+        onClicked: currentProxy == null ? null : (menuItem) => handleVpnConnect(menuItem),
+      ),
+      MenuSeparator(),
+      MenuItemLabel(label: '退出', onClicked: (menuItem) {
+        setState(() {
+          _isJustExistApp = true;
+        });
+        appWindow.close();
+      }),
+    ]);
+    // set context menu
+    await systemTray.setContextMenu(menu);
+  }
+
+  void handleVpnConnect(MenuItemBase menuItem) {
+    if (vpnState == FlutterLeafState.disconnected) {
+      FlutterLeaf.connect(configContent: context.read<ProxiesProvider>().proxyToConfig(currentProxy!));
+      menuItem.setCheck(true);
+    } else if (vpnState == FlutterLeafState.connected) {
+      FlutterLeaf.disconnect();
+      menuItem.setCheck(false);
+    }
   }
 
   @override

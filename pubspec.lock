@@ -175,6 +175,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_window_close:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: main
+      resolved-ref: "709b359205969a3b054e7ff878f5c09aaf0d2ee0"
+      url: "https://github.com/zonble/flutter_window_close.git"
+    source: git
+    version: "0.2.2"
   hive:
     dependency: "direct main"
     description:
@@ -468,6 +477,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.0"
+  system_tray:
+    dependency: "direct main"
+    description:
+      name: system_tray
+      sha256: "40444e5de8ed907822a98694fd031b8accc3cb3c0baa547634ce76189cf3d9cf"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.3"
   term_glyph:
     dependency: transitive
     description:

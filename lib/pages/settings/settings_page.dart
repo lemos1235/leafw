@@ -117,8 +117,6 @@ class GeneralSettings extends StatefulWidget {
 }
 
 class _GeneralSettingsState extends State<GeneralSettings> {
-  //开机自启
-  bool autoStartOn = false;
 
   //应用设置
   late AppSettings appSettings;
@@ -127,18 +125,26 @@ class _GeneralSettingsState extends State<GeneralSettings> {
   late TextEditingController _socksPortController;
   late TextEditingController _httpPortController;
 
+  //开机自启
+  bool _isAutoStartOn = false;
+
   @override
   void initState() {
     super.initState();
-    handleAutoStart();
     final appSettings = context.read<SettingsProvider>().getAppSettings();
     _socksPortController = TextEditingController(text: appSettings.proxySettings.inboundSocksPort.toString());
     _httpPortController = TextEditingController(text: appSettings.proxySettings.inboundHttpPort.toString());
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      handleAutoStart();
+    });
   }
 
   //开机启动
   void handleAutoStart() async {
-    autoStartOn = await AutostartHelper.isAutoStartEnabled();
+    final autoStartOn = await AutostartHelper.isAutoStartEnabled();
+    setState(() {
+      _isAutoStartOn = autoStartOn;
+    });
   }
 
   @override
@@ -172,11 +178,11 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                             child: FittedBox(
                               fit: BoxFit.fill,
                               child: Switch(
-                                  value: autoStartOn,
+                                  value: _isAutoStartOn,
                                   onChanged: (val) {
                                     setState(() {
-                                      autoStartOn = val;
-                                      if (autoStartOn) {
+                                      _isAutoStartOn = val;
+                                      if (_isAutoStartOn) {
                                         AutostartHelper.enableAutoStart();
                                       } else {
                                         AutostartHelper.disableAutoStart();

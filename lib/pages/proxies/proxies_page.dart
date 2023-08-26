@@ -147,9 +147,8 @@ class _ProxiesContentState extends State<ProxiesContent> {
       floatingActionButton: currentProxy == null
           ? null
           : FloatingActionButton(
-              child: Icon(
-                LucideIcons.bird,
-                color: vpnState == FlutterLeafState.connected ? context.colorScheme.primary : context.colorScheme.error,
+              child: VpnStartIcon(
+                isConnected: vpnState == FlutterLeafState.connected,
               ),
               onPressed: handleVpnConnect,
             ),
@@ -282,6 +281,85 @@ class _ProxiesContentState extends State<ProxiesContent> {
     } else if (vpnState == FlutterLeafState.connected) {
       FlutterLeaf.disconnect();
     }
+  }
+}
+
+class VpnStartIcon extends StatefulWidget {
+  const VpnStartIcon({super.key, required this.isConnected, this.duration = const Duration(seconds: 1)});
+
+  final bool isConnected;
+
+  final Duration duration;
+
+  @override
+  State<VpnStartIcon> createState() => _VpnStartIconState();
+}
+
+class _VpnStartIconState extends State<VpnStartIcon> with TickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+  }
+
+  @override
+  void didUpdateWidget(covariant VpnStartIcon oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!oldWidget.isConnected && widget.isConnected) {
+      _controller.forward(from: 0.0);
+    } else {
+      _controller.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final rotationTurns = Tween(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Interval(0, 3 / 4, curve: Curves.fastOutSlowIn)));
+    final fadeOpacity = Tween(begin: 1.0, end: 0.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Interval(3 / 4, 1, curve: Curves.fastOutSlowIn)));
+    final secondaryFadeOpacity = Tween(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Interval(3 / 4, 1, curve: Curves.fastOutSlowIn)));
+    return AnimatedBuilder(
+      animation: _controller,
+      child: Icon(
+        LucideIcons.bird,
+        color: widget.isConnected ? context.colorScheme.primary : context.colorScheme.error,
+      ),
+      builder: (context, child) {
+        return !_controller.isAnimating
+            ? child!
+            : Stack(
+                children: [
+                  FadeTransition(
+                    opacity: fadeOpacity,
+                    child: ScaleTransition(
+                      scale: fadeOpacity,
+                      child: RotationTransition(
+                        turns: rotationTurns,
+                        child: Icon(LucideIcons.circleDotDashed),
+                      ),
+                    ),
+                  ),
+                  FadeTransition(
+                    opacity: secondaryFadeOpacity,
+                    child: ScaleTransition(
+                      scale: secondaryFadeOpacity,
+                      child: child!,
+                    ),
+                  ),
+                ],
+              );
+      },
+    );
   }
 }
 
