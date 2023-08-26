@@ -2,6 +2,8 @@
 // [Author] lg (https://github.com/lemos1235)
 // [Date] 2023/3/12
 //
+import 'package:canis/model/app_settings.dart';
+
 class Proxy {
   final String id;
   final String scheme;
@@ -20,11 +22,45 @@ class Proxy {
   }
 
   // 转换成配置模板
-  String toConfig() {
-    if (username?.isNotEmpty ?? false) {
-      return "$scheme://$username:$password@$host:$port";
+  String toConfig(ProxySettings proxySettings) {
+    final s = StringBuffer();
+    s.writeln("[General]");
+    s.writeln("loglevel = debug");
+    // s.writeln("dns-server = 114.114.114.114");
+    //tun
+    if (proxySettings.isTunEnabled) {
+      s.writeln("tun = auto");
     }
-    return "$scheme://$host:$port";
+    //端口监听
+    if (proxySettings.inboundHttpPort > 0) {
+      if (proxySettings.inboundAllowAlan) {
+        s.writeln("interface = 0.0.0.0");
+      } else {
+        s.writeln("interface = 127.0.0.1");
+      }
+      s.writeln("port = ${proxySettings.inboundHttpPort}");
+    }
+    if (proxySettings.inboundSocksPort > 0) {
+      if (proxySettings.inboundAllowAlan) {
+        s.writeln("socks-interface = 0.0.0.0");
+      } else {
+        s.writeln("socks-interface = 127.0.0.1");
+      }
+      s.writeln("socks-port = ${proxySettings.inboundSocksPort}");
+    }
+    s.writeln("[Proxy]");
+    s.writeln("Direct = direct");
+    //代理
+    s.write("SOCKS5 = socks,$host,$port");
+    if ((username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)) {
+      s.write(",username=$username,password=$password");
+    }
+    s.writeln();
+    //规则
+    s.writeln("[Rule]");
+    s.writeln("FINAL, SOCKS5");
+    print('configContent:\n####\n${s.toString()}####\n');
+    return s.toString();
   }
 
   Proxy({

@@ -68,7 +68,8 @@ class Appearance {
 }
 
 class ProxySettings {
-  const ProxySettings({this.inboundAllowAlan = false, this.inboundHttpPort = 0, this.inboundSocksPort = 0});
+  const ProxySettings(
+      {this.inboundAllowAlan = false, this.inboundHttpPort = 0, this.inboundSocksPort = 0, this.isTunEnabled = false});
 
   final bool inboundAllowAlan;
 
@@ -76,15 +77,19 @@ class ProxySettings {
 
   final int inboundSocksPort;
 
+  final bool isTunEnabled;
+
   ProxySettings copyWith({
     bool? inboundAllowAlan,
     int? inboundHttpPort,
     int? inboundSocksPort,
+    bool? isTunEnabled,
   }) {
     return ProxySettings(
       inboundAllowAlan: inboundAllowAlan ?? this.inboundAllowAlan,
       inboundHttpPort: inboundHttpPort ?? this.inboundHttpPort,
       inboundSocksPort: inboundSocksPort ?? this.inboundSocksPort,
+      isTunEnabled: isTunEnabled ?? this.isTunEnabled,
     );
   }
 
@@ -93,6 +98,7 @@ class ProxySettings {
       inboundAllowAlan: json['inboundAllowAlan'],
       inboundHttpPort: json['inboundHttpPort'],
       inboundSocksPort: json['inboundSocksPort'],
+      isTunEnabled: json['isTunEnabled'],
     );
   }
 
@@ -101,6 +107,7 @@ class ProxySettings {
     map['inboundAllowAlan'] = inboundAllowAlan;
     map['inboundHttpPort'] = inboundHttpPort;
     map['inboundSocksPort'] = inboundSocksPort;
+    map['isTunEnabled'] = isTunEnabled;
     return map;
   }
 }

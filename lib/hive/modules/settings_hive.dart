@@ -24,4 +24,10 @@ class SettingsHive {
     final box = Hive.box(HiveBoxes.settingsOpenBox);
     return box.put(_keySettings, value.toJson());
   }
+
+  /// 清除旧设置
+  static void clearSettings() {
+    final box = Hive.box(HiveBoxes.settingsOpenBox);
+    box.deleteFromDisk();
+  }
 }

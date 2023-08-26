@@ -2,6 +2,7 @@
 // [Author] lg (https://github.com/lemos1235)
 // [Date] 2023/6/4
 //
+import 'package:canis/model/proxy.dart';
 import 'package:flutter/material.dart';
 import 'package:canis/hive/modules/settings_hive.dart';
 import 'package:canis/model/app_settings.dart';

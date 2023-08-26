@@ -112,11 +112,14 @@ class _ProxiesContentState extends State<ProxiesContent> {
 
   late FlutterLeafState vpnState;
 
+  late Proxy? currentProxy;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     proxyGroupList = context.watch<ProxiesProvider>().getProxyGroupList();
     vpnState = context.watch<ProxiesProvider>().getCurrentVpnState();
+    currentProxy = context.watch<ProxiesProvider>().getCurrentProxy();
   }
 
   @override
@@ -141,10 +144,15 @@ class _ProxiesContentState extends State<ProxiesContent> {
         },
         itemCount: proxyGroupList.length,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(LucideIcons.bird),
-      ),
+      floatingActionButton: currentProxy == null
+          ? null
+          : FloatingActionButton(
+              child: Icon(
+                LucideIcons.bird,
+                color: vpnState == FlutterLeafState.connected ? context.colorScheme.primary : context.colorScheme.error,
+              ),
+              onPressed: handleVpnConnect,
+            ),
     );
   }
 
@@ -152,9 +160,7 @@ class _ProxiesContentState extends State<ProxiesContent> {
     final vpnStatusIcon = Icon(
       Icons.circle,
       size: 8,
-      color: (group.isCurrent && vpnState == FlutterLeafState.connected)
-          ? context.colorScheme.primary
-          : Colors.grey,
+      color: (group.isCurrent && vpnState == FlutterLeafState.connected) ? context.colorScheme.primary : Colors.grey,
     );
     return Container(
       margin: EdgeInsets.only(top: 10),
@@ -269,11 +275,18 @@ class _ProxiesContentState extends State<ProxiesContent> {
       },
     );
   }
+
+  void handleVpnConnect() {
+    if (vpnState == FlutterLeafState.disconnected) {
+      FlutterLeaf.connect(configContent: context.read<ProxiesProvider>().proxyToConfig(currentProxy!));
+    } else if (vpnState == FlutterLeafState.connected) {
+      FlutterLeaf.disconnect();
+    }
+  }
 }
 
 class RefreshSubscriptionButton extends StatefulWidget {
-  const RefreshSubscriptionButton({Key? key, required this.groupId, required this.subscriptionUrl})
-      : super(key: key);
+  const RefreshSubscriptionButton({Key? key, required this.groupId, required this.subscriptionUrl}) : super(key: key);
 
   final String groupId;
 
@@ -283,8 +296,7 @@ class RefreshSubscriptionButton extends StatefulWidget {
   State<RefreshSubscriptionButton> createState() => _RefreshSubscriptionButtonState();
 }
 
-class _RefreshSubscriptionButtonState extends State<RefreshSubscriptionButton>
-    with SingleTickerProviderStateMixin {
+class _RefreshSubscriptionButtonState extends State<RefreshSubscriptionButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -504,7 +516,7 @@ class _ProxyListState extends State<ProxyList> {
   void switchProxy(Proxy proxy) async {
     context.read<ProxiesProvider>().setCurrent(proxy.id, proxy.groupId);
     if (widget.vpnState == FlutterLeafState.connected) {
-      FlutterLeaf.switchProxy(configContent: proxy.toConfig());
+      FlutterLeaf.switchProxy(configContent: context.read<ProxiesProvider>().proxyToConfig(proxy));
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("已切换")));
     }
   }

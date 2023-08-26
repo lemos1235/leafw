@@ -17,18 +17,18 @@ void main() async {
   await NetUtil.init();
   runApp(MultiProvider(
     providers: providers,
-    child: const LeavesApp(),
+    child: const CanisApp(),
   ));
 }
 
-class LeavesApp extends StatefulWidget {
-  const LeavesApp({super.key});
+class CanisApp extends StatefulWidget {
+  const CanisApp({super.key});
 
   @override
-  State<LeavesApp> createState() => _LeavesAppState();
+  State<CanisApp> createState() => _CanisAppState();
 }
 
-class _LeavesAppState extends State<LeavesApp> {
+class _CanisAppState extends State<CanisApp> {
   late AppSettings appSettings;
 
   @override

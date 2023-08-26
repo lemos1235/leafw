@@ -3,17 +3,23 @@
 // [Date] 2023/3/13
 //
 import 'dart:async';
+import 'dart:io';
 
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:canis/api/api.dart';
 import 'package:canis/hive/modules/proxies_hive.dart';
 import 'package:canis/model/proxy.dart';
 import 'package:canis/model/proxy_group.dart';
+import 'package:canis/providers/settings_provider.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_leaf/flutter_leaf.dart';
 import 'package:flutter_leaf/state.dart';
 
 class ProxiesProvider with ChangeNotifier {
+  ProxiesProvider({required this.settingsProvider});
+
+  SettingsProvider settingsProvider;
+
   List<ProxyGroup> proxyGroupList = [];
 
   /// 自动刷新定时器
@@ -37,28 +43,32 @@ class ProxiesProvider with ChangeNotifier {
     currentId = ProxiesHive.getCurrentId();
     currentGroupId = ProxiesHive.getCurrentGroupId();
     proxyGroupList = ProxiesHive.getProxyGroupList();
-    // FlutterLeaf.prepare();
-    // final flutterVpnState = await FlutterLeaf.currentState;
-    // vpnState = flutterVpnState;
-    // notifyListeners();
-    // // 定时刷新
-    // if (vpnState == FlutterLeafState.connected) {
-    //   for (final group in proxyGroupList) {
-    //     if (group.id == currentGroupId) {
-    //       _handleAutoRefresh(group);
-    //     }
-    //   }
-    // }
-    // FlutterLeaf.onStateChanged.listen((s) {
-    //   vpnState = s;
-    //   notifyListeners();
-    //   if (vpnState == FlutterLeafState.disconnected) {
-    //     autoRefreshTimer?.cancel();
-    //   } else if (vpnState == FlutterLeafState.connected) {
-    //     final newProxyGroup = proxyGroupList.firstWhere((element) => element.id == currentGroupId);
-    //     _handleAutoRefresh(newProxyGroup);
-    //   }
-    // });
+    if (Platform.isMacOS) {
+      //mac版本相关插件方法未实现
+      return;
+    }
+    FlutterLeaf.prepare();
+    final flutterVpnState = await FlutterLeaf.currentState;
+    vpnState = flutterVpnState;
+    notifyListeners();
+    // 定时刷新
+    if (vpnState == FlutterLeafState.connected) {
+      for (final group in proxyGroupList) {
+        if (group.id == currentGroupId) {
+          _handleAutoRefresh(group);
+        }
+      }
+    }
+    FlutterLeaf.onStateChanged.listen((s) {
+      vpnState = s;
+      notifyListeners();
+      if (vpnState == FlutterLeafState.disconnected) {
+        autoRefreshTimer?.cancel();
+      } else if (vpnState == FlutterLeafState.connected) {
+        final newProxyGroup = proxyGroupList.firstWhere((element) => element.id == currentGroupId);
+        _handleAutoRefresh(newProxyGroup);
+      }
+    });
   }
 
   ///获取当前vpn状态
@@ -203,7 +213,7 @@ class ProxiesProvider with ChangeNotifier {
     proxyGroupList[groupIndex] = proxyGroup.copyWith(proxyList: cloneList);
     ProxiesHive.setProxyGroupList(proxyGroupList);
     if (vpnState == FlutterLeafState.connected && proxy.groupId == currentGroupId && proxy.id == currentId) {
-      FlutterLeaf.switchProxy(configContent: proxy.toConfig());
+      FlutterLeaf.switchProxy(configContent: proxyToConfig(proxy));
     }
     notifyListeners();
   }
@@ -222,7 +232,7 @@ class ProxiesProvider with ChangeNotifier {
     if (vpnState == FlutterLeafState.connected && finalGroup.id == currentGroupId) {
       final proxy = finalGroup.proxyList.firstWhereOrNull((e) => e.id == currentId);
       if (proxy != null) {
-        FlutterLeaf.switchProxy(configContent: proxy.toConfig());
+        FlutterLeaf.switchProxy(configContent: proxyToConfig(proxy));
       } else {
         //如果当前组下的代理由于更新而被删除了，则断开连接
         FlutterLeaf.disconnect();
@@ -285,5 +295,10 @@ class ProxiesProvider with ChangeNotifier {
         autoRefreshTimer = timer;
       } catch (_) {}
     }
+  }
+
+  ///代理对象转换成配置文件
+  String proxyToConfig(Proxy proxy) {
+    return proxy.toConfig(settingsProvider.appSettings.proxySettings);
   }
 }

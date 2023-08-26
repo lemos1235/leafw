@@ -131,6 +131,9 @@ class _GeneralSettingsState extends State<GeneralSettings> {
   void initState() {
     super.initState();
     handleAutoStart();
+    final appSettings = context.read<SettingsProvider>().getAppSettings();
+    _socksPortController = TextEditingController(text: appSettings.proxySettings.inboundSocksPort.toString());
+    _httpPortController = TextEditingController(text: appSettings.proxySettings.inboundHttpPort.toString());
   }
 
   //开机启动
@@ -142,8 +145,6 @@ class _GeneralSettingsState extends State<GeneralSettings> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     appSettings = context.watch<SettingsProvider>().getAppSettings();
-    _socksPortController = TextEditingController(text: appSettings.proxySettings.inboundSocksPort.toString());
-    _httpPortController = TextEditingController(text: appSettings.proxySettings.inboundHttpPort.toString());
   }
 
   @override
@@ -258,16 +259,23 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                           Text("SOCKS5 代理端口"),
                           SizedBox(
                             width: 74,
-                            child: TextField(
-                              controller: _socksPortController,
-                              style: TextStyle(fontSize: 14),
-                              strutStyle: StrutStyle(fontSize: 14.0),
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                isCollapsed: true,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                            child: Focus(
+                              onFocusChange: (gainsFocus) {
+                                if (!gainsFocus) {
+                                  saveProxySettings();
+                                }
+                              },
+                              child: TextField(
+                                controller: _socksPortController,
+                                style: TextStyle(fontSize: 14),
+                                strutStyle: StrutStyle(fontSize: 14.0),
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  isCollapsed: true,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                ),
                               ),
                             ),
                           ),
@@ -286,16 +294,23 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                           Text("HTTP 代理端口"),
                           SizedBox(
                             width: 74,
-                            child: TextField(
-                              controller: _httpPortController,
-                              style: TextStyle(fontSize: 14),
-                              strutStyle: StrutStyle(fontSize: 14.0),
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                isCollapsed: true,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                            child: Focus(
+                              onFocusChange: (gainsFocus) {
+                                if (!gainsFocus) {
+                                  saveProxySettings();
+                                }
+                              },
+                              child: TextField(
+                                controller: _httpPortController,
+                                style: TextStyle(fontSize: 14),
+                                strutStyle: StrutStyle(fontSize: 14.0),
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  isCollapsed: true,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                ),
                               ),
                             ),
                           ),
@@ -312,6 +327,16 @@ class _GeneralSettingsState extends State<GeneralSettings> {
         ),
       ],
     );
+  }
+
+  //保存代理设置
+  void saveProxySettings() {
+    final httpPortText = _httpPortController.text;
+    final socksPortText = _socksPortController.text;
+    context.read<SettingsProvider>().updateProxySettings(
+          inboundHttpPort: int.parse(httpPortText),
+          inboundSocksPort: int.parse(socksPortText),
+        );
   }
 }
 
