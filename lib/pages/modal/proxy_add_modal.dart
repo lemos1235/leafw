@@ -3,6 +3,7 @@
 // [Date] 2023/8/20
 //
 import 'package:canis/constant/proxy_type.dart';
+import 'package:canis/extensions/extensions.dart';
 import 'package:canis/pages/proxies/proxy_edit_form.dart';
 import 'package:canis/pages/proxies/proxy_group_edit_form.dart';
 import 'package:canis/widgets/tapper.dart';
@@ -16,7 +17,6 @@ class ProxyAddModal extends StatefulWidget {
 }
 
 class _ProxyAddModalState extends State<ProxyAddModal> {
-
   ProxyType? _proxyType = ProxyType.local;
 
   @override
@@ -30,17 +30,18 @@ class _ProxyAddModalState extends State<ProxyAddModal> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Radio(
-                      value: type,
-                      groupValue: _proxyType,
-                      onChanged: (ProxyType? value) {
-                        setState(() {
-                          _proxyType = value;
-                        });
-                      },
-                    ),
                     Tapper(
-                      child: Text(type.title),
+                      child: Row(
+                        children: [
+                          Icon(
+                            _proxyType == type ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                            color: context.colorScheme.primary,
+                            size: 18,
+                          ),
+                          SizedBox(width: 8),
+                          Text(type.title),
+                        ],
+                      ),
                       onTap: () {
                         setState(() {
                           _proxyType = type;

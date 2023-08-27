@@ -142,55 +142,53 @@ class _CanisAppState extends State<CanisApp> {
       title: 'Canis',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          fontFamily: 'NotoSansSC',
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF81C784)),
-          useMaterial3: true,
-          navigationRailTheme: const NavigationRailThemeData(
-            backgroundColor: Color(0xFF252626),
-            labelType: NavigationRailLabelType.none,
-            indicatorColor: Colors.transparent,
-            indicatorShape: CircleBorder(),
-            selectedIconTheme: IconThemeData(
-              color: Colors.white,
-              fill: 0,
-            ),
-            unselectedIconTheme: IconThemeData(
-              color: Colors.white,
-            ),
+        fontFamily: 'NotoSansSC',
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF81C784)),
+        useMaterial3: true,
+        navigationRailTheme: const NavigationRailThemeData(
+          backgroundColor: Color(0xFF252626),
+          labelType: NavigationRailLabelType.none,
+          indicatorColor: Colors.transparent,
+          indicatorShape: CircleBorder(),
+          selectedIconTheme: IconThemeData(
+            color: Colors.white,
+            fill: 0,
           ),
-          bottomSheetTheme: const BottomSheetThemeData(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-            ),
-          ),
-          appBarTheme: const AppBarTheme(
-            centerTitle: true,
-            titleTextStyle: TextStyle(
-              color: Color(0xFF222222),
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          dividerTheme: const DividerThemeData(
-            color: Color(0xFFEEEEEE),
-          ),
-          dialogTheme: DialogTheme(
-            shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-          ),
-          popupMenuTheme: PopupMenuThemeData(
+          unselectedIconTheme: IconThemeData(
             color: Colors.white,
           ),
-          segmentedButtonTheme: SegmentedButtonThemeData(
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-              ),
-            ),
-          )),
+        ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+          ),
+        ),
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            color: Color(0xFF222222),
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        dividerTheme: const DividerThemeData(
+          color: Color(0xFFEEEEEE),
+        ), popupMenuTheme: PopupMenuThemeData(
+        color: Colors.white,
+      ),
+
+        dialogTheme: DialogTheme(
+          shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: TextStyle(fontSize: 14),
+          hintStyle: TextStyle(fontSize: 12),
+          errorStyle: TextStyle(fontSize: 12),
+          floatingLabelStyle: TextStyle(fontSize: 11),
+        ),
+      ),
       darkTheme: ThemeData(
         fontFamily: 'NotoSansSC',
         brightness: Brightness.dark,
@@ -216,11 +214,20 @@ class _CanisAppState extends State<CanisApp> {
         cardTheme: const CardTheme(
           color: Color(0xFF242424),
         ),
-        dialogTheme: DialogTheme(
-          shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: Color(0xFF2D2D2D),
+        ),
+        dialogTheme: DialogTheme(
+          shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          backgroundColor: Color(0xFF1A1C19),
+          shadowColor: Color(0xFF1A1C19),
+          surfaceTintColor: Color(0xFF1A1C19),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: TextStyle(fontSize: 14),
+          hintStyle: TextStyle(fontSize: 12),
+          errorStyle: TextStyle(fontSize: 12),
+          floatingLabelStyle: TextStyle(fontSize: 11),
         ),
       ),
       themeMode: appSettings.appearance.themeMode,

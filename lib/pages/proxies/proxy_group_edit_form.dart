@@ -62,7 +62,7 @@ class _ProxyGroupEditFormState extends State<ProxyGroupEditForm> {
             TextFormField(
               controller: _refreshIntervalController,
               decoration: InputDecoration(
-                labelText: "刷新间隔：",
+                labelText: "自动刷新：",
                 hintText: "选填（单位秒）",
                 // floatingLabelBehavior: FloatingLabelBehavior.always,
               ),
