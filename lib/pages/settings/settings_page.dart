@@ -375,6 +375,44 @@ class _GeneralSettingsState extends State<GeneralSettings> {
             ),
           ),
         ),
+        SizedBox(height: 10),
+        ShadowCard(
+          margin: EdgeInsets.only(bottom: 15, left: 10, right: 10),
+          color: context.theme.cardTheme.color,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("开启全局代理"),
+                          SizedBox(
+                            height: 28,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Switch(
+                                  value: appSettings.proxySettings.isTunEnabled,
+                                  onChanged: (val) {
+                                    context.read<SettingsProvider>().updateProxySettings(isTunEnabled: val);
+                                  }),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 80),
+                    Spacer(),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

@@ -56,6 +56,7 @@ class SettingsProvider with ChangeNotifier {
     bool? inboundAllowAlan,
     int? inboundHttpPort,
     int? inboundSocksPort,
+    bool? isTunEnabled,
   }) {
     final settings = appSettings.copyWith(
       proxySettings: appSettings.proxySettings.copyWith(
@@ -63,6 +64,7 @@ class SettingsProvider with ChangeNotifier {
         inboundAllowAlan: inboundAllowAlan,
         inboundHttpPort: inboundHttpPort,
         inboundSocksPort: inboundSocksPort,
+        isTunEnabled: isTunEnabled,
       ),
     );
     setAppSettings(settings);
