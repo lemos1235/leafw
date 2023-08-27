@@ -2,19 +2,19 @@
 // [Author] lg (https://github.com/lemos1235)
 // [Date] 2023/6/4
 //
-import 'package:canis/model/proxy.dart';
-import 'package:flutter/material.dart';
 import 'package:canis/hive/modules/settings_hive.dart';
 import 'package:canis/model/app_settings.dart';
+import 'package:flutter/material.dart';
 
 class SettingsProvider with ChangeNotifier {
   AppSettings appSettings = AppSettings();
 
-  void initAppSettings() {
+  AppSettings initAppSettings() {
     final settings = SettingsHive.getSettings();
     if (settings != null) {
       appSettings = settings;
     }
+    return appSettings;
   }
 
   AppSettings getAppSettings() {
@@ -44,6 +44,15 @@ class SettingsProvider with ChangeNotifier {
         inboundAllowAlan: inboundAllowAlan,
         inboundHttpPort: inboundHttpPort,
         inboundSocksPort: inboundSocksPort,
+      ),
+    );
+    setAppSettings(settings);
+  }
+
+  void toggleHideInSystemTray(bool hide) {
+    final settings = appSettings.copyWith(
+      commonSettings: appSettings.commonSettings.copyWith(
+        hideToTrayWhenClose: hide,
       ),
     );
     setAppSettings(settings);

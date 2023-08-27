@@ -8,19 +8,23 @@ import 'package:canis/extensions/extensions.dart';
 class AppSettings {
   final Appearance appearance;
   final ProxySettings proxySettings;
+  final CommonSettings commonSettings;
 
   AppSettings({
     this.appearance = const Appearance(),
     this.proxySettings = const ProxySettings(),
+    this.commonSettings = const CommonSettings(),
   });
 
   AppSettings copyWith({
     Appearance? appearance,
     ProxySettings? proxySettings,
+    CommonSettings? commonSettings,
   }) {
     return AppSettings(
       appearance: appearance ?? this.appearance,
       proxySettings: proxySettings ?? this.proxySettings,
+      commonSettings: commonSettings ?? this.commonSettings,
     );
   }
 
@@ -28,6 +32,7 @@ class AppSettings {
     return AppSettings(
       appearance: Appearance.fromJson(json['appearance']),
       proxySettings: ProxySettings.fromJson(json['proxySettings']),
+      commonSettings: CommonSettings.fromJson(json['commonSettings']),
     );
   }
 
@@ -35,6 +40,7 @@ class AppSettings {
     final map = <String, dynamic>{};
     map['appearance'] = appearance.toJson();
     map['proxySettings'] = proxySettings.toJson();
+    map['commonSettings'] = commonSettings.toJson();
     return map;
   }
 }
@@ -63,6 +69,37 @@ class Appearance {
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['themeMode'] = themeMode.index;
+    return map;
+  }
+}
+
+class CommonSettings {
+  const CommonSettings({this.hideAppWhenStart = false, this.hideToTrayWhenClose = true});
+
+  final bool hideToTrayWhenClose;
+  final bool hideAppWhenStart;
+
+  CommonSettings copyWith({
+    bool? hideAppWhenStart,
+    bool? hideToTrayWhenClose,
+  }) {
+    return CommonSettings(
+      hideAppWhenStart: hideAppWhenStart ?? this.hideAppWhenStart,
+      hideToTrayWhenClose: hideToTrayWhenClose ?? this.hideToTrayWhenClose,
+    );
+  }
+
+  factory CommonSettings.fromJson(dynamic json) {
+    return CommonSettings(
+      hideAppWhenStart: json['hideAppWhenStart'],
+      hideToTrayWhenClose: json['hideToTrayWhenClose'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['hideAppWhenStart'] = hideAppWhenStart;
+    map['hideToTrayWhenClose'] = hideToTrayWhenClose;
     return map;
   }
 }
