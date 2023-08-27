@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_leaf
   flutter_window_close
+  proxy_manager
   system_tray
 )
 

@@ -105,8 +105,15 @@ class CommonSettings {
 }
 
 class ProxySettings {
-  const ProxySettings(
-      {this.inboundAllowAlan = false, this.inboundHttpPort = 0, this.inboundSocksPort = 0, this.isTunEnabled = false});
+  const ProxySettings({
+    this.inboundSystemProxy = true,
+    this.inboundAllowAlan = false,
+    this.inboundHttpPort = 11808,
+    this.inboundSocksPort = 12808,
+    this.isTunEnabled = false,
+  });
+
+  final bool inboundSystemProxy;
 
   final bool inboundAllowAlan;
 
@@ -117,12 +124,14 @@ class ProxySettings {
   final bool isTunEnabled;
 
   ProxySettings copyWith({
+    bool? inboundSystemProxy,
     bool? inboundAllowAlan,
     int? inboundHttpPort,
     int? inboundSocksPort,
     bool? isTunEnabled,
   }) {
     return ProxySettings(
+      inboundSystemProxy: inboundSystemProxy ?? this.inboundSystemProxy,
       inboundAllowAlan: inboundAllowAlan ?? this.inboundAllowAlan,
       inboundHttpPort: inboundHttpPort ?? this.inboundHttpPort,
       inboundSocksPort: inboundSocksPort ?? this.inboundSocksPort,
@@ -132,6 +141,7 @@ class ProxySettings {
 
   factory ProxySettings.fromJson(dynamic json) {
     return ProxySettings(
+      inboundSystemProxy: json['inboundSystemProxy'],
       inboundAllowAlan: json['inboundAllowAlan'],
       inboundHttpPort: json['inboundHttpPort'],
       inboundSocksPort: json['inboundSocksPort'],
@@ -141,6 +151,7 @@ class ProxySettings {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
+    map['inboundSystemProxy'] = inboundSystemProxy;
     map['inboundAllowAlan'] = inboundAllowAlan;
     map['inboundHttpPort'] = inboundHttpPort;
     map['inboundSocksPort'] = inboundSocksPort;

@@ -440,6 +440,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.0.5"
+  proxy_manager:
+    dependency: "direct main"
+    description:
+      name: proxy_manager
+      sha256: "4cdb8853bcedc1a6879c6d940d624d740e1c76ee6b83377b13270f96a8415a37"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.3"
   sky_engine:
     dependency: transitive
     description: flutter

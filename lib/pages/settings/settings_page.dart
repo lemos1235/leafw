@@ -117,7 +117,6 @@ class GeneralSettings extends StatefulWidget {
 }
 
 class _GeneralSettingsState extends State<GeneralSettings> {
-
   //应用设置
   late AppSettings appSettings;
 
@@ -273,8 +272,8 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                               },
                               child: TextField(
                                 controller: _socksPortController,
-                                style: TextStyle(fontSize: 14),
-                                strutStyle: StrutStyle(fontSize: 14.0),
+                                style: TextStyle(fontSize: 13),
+                                strutStyle: StrutStyle(fontSize: 13.0),
                                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
@@ -308,8 +307,8 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                               },
                               child: TextField(
                                 controller: _httpPortController,
-                                style: TextStyle(fontSize: 14),
-                                strutStyle: StrutStyle(fontSize: 14.0),
+                                style: TextStyle(fontSize: 13),
+                                strutStyle: StrutStyle(fontSize: 13.0),
                                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
@@ -324,7 +323,26 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                       ),
                     ),
                     SizedBox(width: 80),
-                    Expanded(child: Row()),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("设置为系统代理"),
+                          SizedBox(
+                            height: 28,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Switch(
+                                value: appSettings.proxySettings.inboundSystemProxy,
+                                onChanged: (val) {
+                                  context.read<SettingsProvider>().updateProxySettings(inboundSystemProxy: val);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 )
               ],
