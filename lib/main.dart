@@ -139,7 +139,7 @@ class _CanisAppState extends State<CanisApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '小象IP',
+      title: 'Canis',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           fontFamily: 'NotoSansSC',
