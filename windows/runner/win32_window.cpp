@@ -124,10 +124,34 @@ Win32Window::~Win32Window() {
 bool Win32Window::Create(const std::wstring& title,
                          const Point& origin,
                          const Size& size) {
+  //run only single instance. refer: https://stackoverflow.com/questions/67233239/run-only-single-instance-of-flutter-desktop-application
+  HANDLE hMutexHandle = CreateMutex(NULL, TRUE, L"canis.mutex");
+  HWND handle = FindWindowA(NULL, "canis");
+
+  if (GetLastError() == ERROR_ALREADY_EXISTS) {
+    WINDOWPLACEMENT place = {sizeof(WINDOWPLACEMENT)};
+    GetWindowPlacement(handle, &place);
+    switch (place.showCmd) {
+      case SW_SHOWMAXIMIZED:
+        ShowWindow(handle, SW_SHOWMAXIMIZED);
+            break;
+      case SW_SHOWMINIMIZED:
+        ShowWindow(handle, SW_RESTORE);
+            break;
+      default:
+        ShowWindow(handle, SW_NORMAL);
+            break;
+    }
+    SetWindowPos(0, HWND_TOP, 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOMOVE);
+    SetForegroundWindow(handle);
+    return 0;
+  }
+  ReleaseMutex(hMutexHandle);
+
   Destroy();
 
-  const wchar_t* window_class =
-      WindowClassRegistrar::GetInstance()->GetWindowClass();
+  const wchar_t *window_class =
+          WindowClassRegistrar::GetInstance()->GetWindowClass();
 
   const POINT target_point = {static_cast<LONG>(origin.x),
                               static_cast<LONG>(origin.y)};
