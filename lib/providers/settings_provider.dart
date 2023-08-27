@@ -66,20 +66,22 @@ class SettingsProvider with ChangeNotifier {
       ),
     );
     setAppSettings(settings);
-    if (inboundSystemProxy != null){
+    if (inboundSystemProxy != null || inboundHttpPort != null) {
       setupSystemProxy(settings.proxySettings);
     }
   }
 
   //设置系统代理
   void setupSystemProxy(ProxySettings proxySettings) {
+    ProxyManager proxyManager = ProxyManager();
     if (proxySettings.inboundHttpPort > 0) {
-      ProxyManager proxyManager = ProxyManager();
       if (proxySettings.inboundSystemProxy) {
         proxyManager.setAsSystemProxy(ProxyTypes.http, '127.0.0.1', proxySettings.inboundHttpPort);
       } else {
         proxyManager.cleanSystemProxy();
       }
+    } else {
+      proxyManager.cleanSystemProxy();
     }
   }
 }

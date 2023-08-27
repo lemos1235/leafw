@@ -106,7 +106,7 @@ class CommonSettings {
 
 class ProxySettings {
   const ProxySettings({
-    this.inboundSystemProxy = true,
+    this.inboundSystemProxy = false,
     this.inboundAllowAlan = false,
     this.inboundHttpPort = 11808,
     this.inboundSocksPort = 12808,
