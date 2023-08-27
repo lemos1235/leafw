@@ -74,7 +74,7 @@ class Appearance {
 }
 
 class CommonSettings {
-  const CommonSettings({this.hideAppWhenStart = false, this.hideToTrayWhenClose = true});
+  const CommonSettings({this.hideAppWhenStart = false, this.hideToTrayWhenClose = false});
 
   final bool hideToTrayWhenClose;
   final bool hideAppWhenStart;

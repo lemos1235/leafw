@@ -222,6 +222,32 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("关闭后隐藏到托盘"),
+                          SizedBox(
+                            height: 28,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Switch(
+                                  value: appSettings.commonSettings.hideToTrayWhenClose,
+                                  onChanged: (val) {
+                                    context.read<SettingsProvider>().toggleHideInSystemTray(val);
+                                  }),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 80),
+                    Spacer(),
+                  ],
+                )
               ],
             ),
           ),
