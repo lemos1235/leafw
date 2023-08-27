@@ -390,7 +390,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("开启全局代理"),
+                          Text("全局代理"),
                           SizedBox(
                             height: 28,
                             child: FittedBox(
